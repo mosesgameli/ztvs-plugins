@@ -1,0 +1,18 @@
+# Binaries
+plugin-os/plugin-os
+plugin-os/plugin-os.exe
+plugin-axios-mitigation/plugin-axios-mitigation
+plugin-axios-mitigation/plugin-axios-mitigation.exe
+*.test
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Build artifacts
+bin/
+dist/
+dist/*

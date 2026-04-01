@@ -32,12 +32,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
-          go-version-file: plugin-os/go.mod
+          go-version: '1.26.x'
           cache: true
 
       - name: Set binary extension
@@ -45,8 +45,10 @@ jobs:
         run: |
           if [ "${{ matrix.os }}" = "windows" ]; then
             echo "bin_ext=.exe" >> "$GITHUB_OUTPUT"
+            echo "archive_ext=zip" >> "$GITHUB_OUTPUT"
           else
             echo "bin_ext="      >> "$GITHUB_OUTPUT"
+            echo "archive_ext=tar.gz" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build Plugins
@@ -57,22 +59,30 @@ jobs:
         run: |
           make build BIN_EXT=${{ steps.ext.outputs.bin_ext }}
 
-      - name: Prepare dist directory
+      - name: Prepare distribution
         run: |
-          mkdir -p dist
-          for p in plugin-os plugin-axios-mitigation; do
-            cp $p/$p${{ steps.ext.outputs.bin_ext }} dist/
-            [ -f $p/plugin.yaml ] && cp $p/plugin.yaml dist/$p.yaml
-          done
+          mkdir -p dist/plugin-os dist/plugin-axios-mitigation
+          cp plugin-os/plugin-os${{ steps.ext.outputs.bin_ext }} dist/plugin-os/
+          cp plugin-os/plugin.yaml dist/plugin-os/
+          cp plugin-axios-mitigation/plugin-axios-mitigation${{ steps.ext.outputs.bin_ext }} dist/plugin-axios-mitigation/
+          cp plugin-axios-mitigation/plugin.yaml dist/plugin-axios-mitigation/
 
-      - name: Create Archive
+      - name: Create Archive (tar.gz)
+        if: matrix.os != 'windows'
         run: |
           ARCHIVE="ztvs-plugins-${{ github.ref_name }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz"
           tar -czf "$ARCHIVE" -C dist .
           echo "ASSET=$ARCHIVE" >> "$GITHUB_ENV"
 
+      - name: Create Archive (zip)
+        if: matrix.os == 'windows'
+        run: |
+          ARCHIVE="ztvs-plugins-${{ github.ref_name }}-${{ matrix.os }}-${{ matrix.arch }}.zip"
+          cd dist && zip -r "../$ARCHIVE" . && cd ..
+          echo "ASSET=$ARCHIVE" >> "$GITHUB_ENV"
+
       - name: Upload Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: ztvs-plugins-${{ matrix.os }}-${{ matrix.arch }}
           path: ${{ env.ASSET }}
@@ -83,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all build artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           path: release-assets
           merge-multiple: true
@@ -93,3 +103,5 @@ jobs:
         with:
           files: release-assets/*
           generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
