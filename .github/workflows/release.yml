@@ -61,11 +61,15 @@ jobs:
 
       - name: Prepare distribution
         run: |
-          mkdir -p dist/plugin-os dist/plugin-axios-mitigation
+          mkdir -p dist/plugin-os dist/plugin-axios-mitigation dist/plugin-axios-github-scan
           cp plugin-os/plugin-os${{ steps.ext.outputs.bin_ext }} dist/plugin-os/
           cp plugin-os/plugin.yaml dist/plugin-os/
           cp plugin-axios-mitigation/plugin-axios-mitigation${{ steps.ext.outputs.bin_ext }} dist/plugin-axios-mitigation/
           cp plugin-axios-mitigation/plugin.yaml dist/plugin-axios-mitigation/
+          cp -r plugin-axios-github-scan/src dist/plugin-axios-github-scan/
+          cp plugin-axios-github-scan/plugin.yaml dist/plugin-axios-github-scan/
+          cp plugin-axios-github-scan/pyproject.toml dist/plugin-axios-github-scan/
+          cp plugin-axios-github-scan/uv.lock dist/plugin-axios-github-scan/
 
       - name: Create Archive (tar.gz)
         if: matrix.os != 'windows'

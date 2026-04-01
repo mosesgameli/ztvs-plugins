@@ -1,0 +1,14 @@
+[project]
+name = "plugin-axios-github-scan"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.13.5",
+    "ztvs-sdk-python",
+]
+
+[tool.uv.sources]
+ztvs-sdk-python = { git = "https://github.com/mosesgameli/ztvs-sdk-python.git" }
+
