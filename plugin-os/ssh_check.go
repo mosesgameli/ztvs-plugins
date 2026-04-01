@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"context"
+	"os"
+	"strings"
 
 	"github.com/mosesgameli/ztvs-sdk-go/sdk"
 )
@@ -19,18 +22,45 @@ func (c *SSHCheck) Name() string {
 func (c *SSHCheck) Run(
 	ctx context.Context,
 ) (*sdk.Finding, error) {
+	configPath := "/etc/ssh/sshd_config"
 
-	// For MVP, we simulate a finding.
-	// In a real implementation, we'd read /etc/ssh/sshd_config
-	return &sdk.Finding{
-		ID:          "F-SSH-001",
-		Severity:    "high",
-		Title:       "Root login enabled",
-		Description: "PermitRootLogin yes found",
-		Evidence: map[string]interface{}{
-			"file":  "/etc/ssh/sshd_config",
-			"value": "PermitRootLogin yes",
-		},
-		Remediation: "Set PermitRootLogin no",
-	}, nil
+	file, err := os.Open(configPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, nil // No file, no finding
+		}
+		return nil, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		fields := strings.Fields(line)
+		if len(fields) >= 2 && strings.EqualFold(fields[0], "PermitRootLogin") {
+			if strings.EqualFold(fields[1], "yes") {
+				return &sdk.Finding{
+					ID:          "F-SSH-001",
+					Severity:    "high",
+					Title:       "SSH Root Login Enabled",
+					Description: "The SSH server is configured to allow direct root login, which is a major security risk.",
+					Evidence: map[string]interface{}{
+						"file":           configPath,
+						"finding_string": line,
+					},
+					Remediation: "Modify /etc/ssh/sshd_config to set 'PermitRootLogin no' and reload the sshd service.",
+				}, nil
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return nil, nil
 }
