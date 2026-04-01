@@ -12,7 +12,12 @@ This repository contains the officially supported first-party plugins for the **
 These plugins are built using the [ZTVS Go SDK](https://github.com/mosesgameli/ztvs-sdk-go) and optimized for performance.
 
 - **`plugin-os`**: Core operating system security checks (SSH hardening, password policies, user auditing).
-- **`plugin-axios-mitigation`**: Supply-chain protection targeting known compromised dependencies (e.g., the 2026 Axios RAT).
+- **`plugin-axios-mitigation`**: (Go version) Supply-chain protection targeting known compromised dependencies.
+
+### Python Plugins (Runner-Based)
+These plugins are executed via the [ZTVS Python SDK](https://github.com/mosesgameli/ztvs-sdk-python) and require the [uv](https://astral.sh/uv) runtime.
+
+- **`plugin-axios-github-scan`**: Advanced GitHub organization auditing for axios vulnerabilities and deployment monitoring.
 
 
 ## 🚀 Installation & Usage

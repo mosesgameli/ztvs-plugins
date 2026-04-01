@@ -1,0 +1,11 @@
+name: plugin-axios-github-scan
+version: 1.0.0
+api_version: 1
+runtime:
+  type: python
+  entrypoint: src/plugin_axios_github_scan/main.py
+capabilities:
+  - network_access
+checks_supported:
+  - axios-github-inventory-audit
+  - github-deployment-audit
