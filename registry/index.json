@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "plugins": [
+    {
+      "name": "plugin-os",
+      "latest_version": "1.0.2",
+      "repo": "https://github.com/mosesgameli/ztvs-plugins",
+      "checksum": "",
+      "audit_status": "audited"
+    },
+    {
+      "name": "plugin-axios-mitigation",
+      "latest_version": "1.0.2",
+      "repo": "https://github.com/mosesgameli/ztvs-plugins",
+      "checksum": "",
+      "audit_status": "audited"
+    },
+    {
+      "name": "plugin-axios-github-scan",
+      "latest_version": "1.0.2",
+      "repo": "https://github.com/mosesgameli/ztvs-plugins",
+      "checksum": "",
+      "audit_status": "audited"
+    }
+  ]
+}
