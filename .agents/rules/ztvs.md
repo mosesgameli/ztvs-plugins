@@ -7,6 +7,7 @@ These rules are NORMATIVE for all development on the Zero Trust Vulnerability Sc
 2.  **Zero Trust Execution**: Plugins MUST be executed as separate OS processes and communicate via JSON-RPC 2.0 over stdio.
 3.  **No In-Process Plugins**: Shared libraries (`.so`, `.dll`) are prohibited for plugin execution.
 4.  **Capability-based Security**: Plugins MUST declare required capabilities (e.g., `read_files`) in their manifests.
+5.  **Cross-Platform Fidelity**: All checks MUST be compatible with Linux, macOS, and Windows. See [cross-platform.md](cross-platform.md) for details.
 
 ## Coding Standards
 1.  **Internal vs Pkg**: 

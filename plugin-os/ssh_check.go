@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/mosesgameli/ztvs-sdk-go/sdk"
@@ -22,7 +23,7 @@ func (c *SSHCheck) Name() string {
 func (c *SSHCheck) Run(
 	ctx context.Context,
 ) (*sdk.Finding, error) {
-	configPath := "/etc/ssh/sshd_config"
+	configPath := c.getConfigPath(runtime.GOOS)
 
 	file, err := os.Open(configPath)
 	if err != nil {
@@ -63,4 +64,15 @@ func (c *SSHCheck) Run(
 	}
 
 	return nil, nil
+}
+
+func (c *SSHCheck) getConfigPath(goos string) string {
+	if goos == "windows" {
+		programData := os.Getenv("ProgramData")
+		if programData == "" {
+			programData = `C:\ProgramData`
+		}
+		return programData + `\ssh\sshd_config`
+	}
+	return "/etc/ssh/sshd_config"
 }
