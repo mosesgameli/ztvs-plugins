@@ -1,4 +1,4 @@
-package main
+package checks
 
 import (
 	"bufio"
@@ -23,7 +23,7 @@ func (c *SSHCheck) Name() string {
 func (c *SSHCheck) Run(
 	ctx context.Context,
 ) (*sdk.Finding, error) {
-	configPath := c.getConfigPath(runtime.GOOS)
+	configPath := c.GetConfigPath(runtime.GOOS)
 
 	file, err := os.Open(configPath)
 	if err != nil {
@@ -66,7 +66,7 @@ func (c *SSHCheck) Run(
 	return nil, nil
 }
 
-func (c *SSHCheck) getConfigPath(goos string) string {
+func (c *SSHCheck) GetConfigPath(goos string) string {
 	if goos == "windows" {
 		programData := os.Getenv("ProgramData")
 		if programData == "" {

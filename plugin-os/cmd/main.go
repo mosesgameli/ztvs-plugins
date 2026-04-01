@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/mosesgameli/ztvs-sdk-go/sdk"
+	"github.com/mosesgameli/ztvs/plugins/plugin-os/pkg/checks"
 )
 
 func main() {
@@ -10,6 +11,6 @@ func main() {
 		Version:    "1.0.0",
 		APIVersion: 1,
 	}, []sdk.Check{
-		&SSHCheck{},
+		&checks.SSHCheck{},
 	})
 }

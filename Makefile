@@ -2,14 +2,14 @@ VERSION ?= dev
 BIN_EXT ?=
 LDFLAGS = -s -w
 
-.PHONY: build clean
+.PHONY: build clean $(PLUGINS)
 
 PLUGINS = plugin-os plugin-axios-mitigation
 
 build: $(PLUGINS)
 
 $(PLUGINS):
-	go build -C $@ -ldflags="$(LDFLAGS)" -o $@$(BIN_EXT) .
+	go build -C $@ -ldflags="$(LDFLAGS)" -o $@$(BIN_EXT) ./cmd
 
 clean:
 	for p in $(PLUGINS); do rm -f $$p/$$p; done
