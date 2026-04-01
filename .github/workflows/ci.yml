@@ -8,8 +8,11 @@ on:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint (${{ matrix.plugin }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        plugin: [plugin-os, plugin-axios-mitigation]
     steps:
       - uses: actions/checkout@v4
 
@@ -23,6 +26,7 @@ jobs:
 
       - name: Run golangci-lint
         run: golangci-lint run --timeout 5m
+        working-directory: ${{ matrix.plugin }}
 
   test:
     name: Test (${{ matrix.plugin }} on ${{ matrix.os }})
