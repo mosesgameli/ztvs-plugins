@@ -22,7 +22,7 @@ func (c *HostIOCCheck) Name() string {
 	return "Axios Host IOC Signature Scan"
 }
 
-func (c *HostIOCCheck) Run(ctx context.Context) (*sdk.Finding, error) {
+func (c *HostIOCCheck) Run(_ context.Context) (*sdk.Finding, error) {
 	finding := &sdk.Finding{
 		ID:          "F-AXIOS-002",
 		Severity:    "critical",

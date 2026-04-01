@@ -19,7 +19,7 @@ func (c *NetworkCheck) Name() string {
 	return "Axios C2 Network Connection Probe"
 }
 
-func (c *NetworkCheck) Run(ctx context.Context) (*sdk.Finding, error) {
+func (c *NetworkCheck) Run(_ context.Context) (*sdk.Finding, error) {
 	finding := &sdk.Finding{
 		ID:          "F-AXIOS-003",
 		Severity:    "critical",

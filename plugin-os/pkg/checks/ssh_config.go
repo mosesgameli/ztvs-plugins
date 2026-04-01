@@ -21,7 +21,7 @@ func (c *SSHCheck) Name() string {
 }
 
 func (c *SSHCheck) Run(
-	ctx context.Context,
+	_ context.Context,
 ) (*sdk.Finding, error) {
 	configPath := c.GetConfigPath(runtime.GOOS)
 
