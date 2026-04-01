@@ -25,10 +25,12 @@ jobs:
         run: golangci-lint run --timeout 5m
 
   test:
-    name: Test (${{ matrix.plugin }})
-    runs-on: ubuntu-latest
+    name: Test (${{ matrix.plugin }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         plugin: [plugin-os, plugin-axios-mitigation]
     steps:
       - uses: actions/checkout@v4
