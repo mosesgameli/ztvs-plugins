@@ -29,8 +29,8 @@ func (c *NetworkCheck) Run(_ context.Context) (*sdk.Finding, error) {
 	}
 
 	found := false
-	c2_ip := "142.11.206.73"
-	c2_host := "sfrclak.com"
+	c2IP := "142.11.206.73"
+	c2Host := "sfrclak.com"
 
 	// Network connection check
 	switch runtime.GOOS {
@@ -39,14 +39,14 @@ func (c *NetworkCheck) Run(_ context.Context) (*sdk.Finding, error) {
 		cmd := exec.Command("lsof", "-i", "-n", "-P")
 		out, err := cmd.Output()
 		if err == nil {
-			if strings.Contains(string(out), c2_ip) || strings.Contains(string(out), c2_host) {
+			if strings.Contains(string(out), c2IP) || strings.Contains(string(out), c2Host) {
 				finding.Evidence["connection"] = "Detected active connection via lsof"
 				found = true
 			}
 		}
 	case "windows":
 		// Use Get-NetTCPConnection
-		cmd := exec.Command("powershell", "-Command", "Get-NetTCPConnection | Where-Object { $_.RemoteAddress -eq '"+c2_ip+"' }")
+		cmd := exec.Command("powershell", "-Command", "Get-NetTCPConnection | Where-Object { $_.RemoteAddress -eq '"+c2IP+"' }")
 		out, err := cmd.Output()
 		if err == nil && len(out) > 0 {
 			finding.Evidence["connection"] = "Detected active connection via Get-NetTCPConnection"
