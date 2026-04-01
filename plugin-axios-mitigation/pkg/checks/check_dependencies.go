@@ -1,4 +1,4 @@
-package main
+package checks
 
 import (
 	"bufio"
@@ -118,8 +118,6 @@ func (c *DependencyCheck) findNodeModules(ctx context.Context) []string {
 	}
 
 	// Tier 3: Find (Comprehensive Fallback)
-	// We run this as a slower background walk if native indexed search failed
-	// but we prioritize home directory and /usr
 	searchRoots := []string{"/usr/local/lib", "/usr/lib"}
 	home, _ := os.UserHomeDir()
 	if home != "" {
