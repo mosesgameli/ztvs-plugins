@@ -1,7 +1,7 @@
 import asyncio
 from ztvs_sdk import Metadata, run
-from .checks.axios import AxiosAuditCheck
-from .checks.deployments import DeploymentAuditCheck
+from plugin_axios_github_scan.checks.axios import AxiosAuditCheck
+from plugin_axios_github_scan.checks.deployments import DeploymentAuditCheck
 
 async def main():
     meta = Metadata(
