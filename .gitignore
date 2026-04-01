@@ -16,3 +16,12 @@ plugin-axios-mitigation/plugin-axios-mitigation.exe
 bin/
 dist/
 dist/*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
