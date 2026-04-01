@@ -2,9 +2,9 @@ VERSION ?= dev
 BIN_EXT ?=
 LDFLAGS = -s -w
 
-.PHONY: build clean $(PLUGINS)
-
 PLUGINS = plugin-os plugin-axios-mitigation
+
+.PHONY: build clean $(PLUGINS)
 
 build: $(PLUGINS)
 
