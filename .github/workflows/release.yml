@@ -1,0 +1,95 @@
+name: Release Plugins
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }}/${{ matrix.arch }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+          - os: linux
+            arch: arm64
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+          - os: windows
+            arch: amd64
+          - os: windows
+            arch: arm64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: plugin-os/go.mod
+          cache: true
+
+      - name: Set binary extension
+        id: ext
+        run: |
+          if [ "${{ matrix.os }}" = "windows" ]; then
+            echo "bin_ext=.exe" >> "$GITHUB_OUTPUT"
+          else
+            echo "bin_ext="      >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Plugins
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: "0"
+        run: |
+          make build BIN_EXT=${{ steps.ext.outputs.bin_ext }}
+
+      - name: Prepare dist directory
+        run: |
+          mkdir -p dist
+          for p in plugin-os plugin-axios-mitigation; do
+            cp $p/$p${{ steps.ext.outputs.bin_ext }} dist/
+            [ -f $p/plugin.yaml ] && cp $p/plugin.yaml dist/$p.yaml
+          done
+
+      - name: Create Archive
+        run: |
+          ARCHIVE="ztvs-plugins-${{ github.ref_name }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz"
+          tar -czf "$ARCHIVE" -C dist .
+          echo "ASSET=$ARCHIVE" >> "$GITHUB_ENV"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ztvs-plugins-${{ matrix.os }}-${{ matrix.arch }}
+          path: ${{ env.ASSET }}
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true
