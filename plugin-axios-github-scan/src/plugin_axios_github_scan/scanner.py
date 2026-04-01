@@ -85,7 +85,7 @@ class GitHubScanner:
             if "content" in data and data.get("encoding") == "base64":
                 content = base64.b64decode(data["content"]).decode("utf-8")
                 return json.loads(content) if path.endswith(".json") else content
-        except:
+        except Exception:
             pass
         return None
 
@@ -109,7 +109,7 @@ class GitHubScanner:
             count = len(executed_runs)
             latest = executed_runs[0]["updated_at"] if executed_runs else None
             return count, latest
-        except:
+        except Exception:
             return 0, None
 
     async def get_deployments(self, repo: str, since: datetime) -> List[Dict[str, Any]]:
@@ -126,7 +126,7 @@ class GitHubScanner:
                 if created_at >= since:
                     deployments.append(dep)
             return deployments
-        except:
+        except Exception:
             return []
 
     async def get_deployment_status(
@@ -137,5 +137,5 @@ class GitHubScanner:
         try:
             data = await self._get(url, {"per_page": 1})
             return data[0] if data else None
-        except:
+        except Exception:
             return None
