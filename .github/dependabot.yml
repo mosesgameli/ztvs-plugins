@@ -1,0 +1,30 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/plugin-os"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "go"
+      - "plugin"
+    commit-message:
+      prefix: "chore(deps/plugin-os)"
+
+  - package-ecosystem: "gomod"
+    directory: "/plugin-axios-mitigation"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "go"
+      - "plugin"
+    commit-message:
+      prefix: "chore(deps/plugin-axios-mitigation)"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
