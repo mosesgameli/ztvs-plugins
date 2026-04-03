@@ -24,6 +24,16 @@ updates:
     commit-message:
       prefix: "chore(deps/plugin-axios-mitigation)"
 
+  - package-ecosystem: "uv"
+    directory: "/plugin-axios-github-scan"
+    schedule:
+      interval: 'weekly'
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "python"
+      - "plugin"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
